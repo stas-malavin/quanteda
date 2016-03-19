@@ -436,10 +436,19 @@ tokenize.character <- function(x, what=c("word", "sentence", "character", "faste
         findregex <- paste0("\\b(", exceptions, ")\\.")
         result <- stri_replace_all_regex(result, findregex, "$1_pd_", vectorize_all = FALSE)
 
+        ## substitute newline etc chars for preserving them
+        result <- lapply(result, stringi::stri_replace_all_fixed,
+                         c("\n", "\r"), c("_NEWLINE_", "_RETURN_"), vectorize_all = FALSE)
+
+        # split on sentence boundaries
         result <- stringi::stri_split_boundaries(result, type = "sentence")
-        ## remove newline chars and trailing spaces for sentence tokenization
-        result <- lapply(result, stringi::stri_replace_all_fixed, "\n", "")
-        result <- lapply(result, stringi::stri_trim_right)
+        
+        # replace newline etc chars
+        result <- lapply(result, stringi::stri_replace_all_fixed,
+                         c("_NEWLINE_", "_RETURN_"), c("\n", "\r"), vectorize_all = FALSE)
+
+        # remove leading and trailing spaces for sentence tokenization
+        # result <- lapply(result, stringi::stri_trim_both)
         # remove any "sentences" that were completely blanked out
         result <- lapply(result, function(x) x <- x[which(x != "")])
         

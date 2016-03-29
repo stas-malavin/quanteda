@@ -10,11 +10,21 @@ quanteda 0.9.5
 
 *  corpus documentation now removes the description of the corpus object's structure since too many users were accessing these internal elements directly, which is strongly discouraged, as we are likely to change the corpus internals (soon and often).  Repeat after me: "encapsulation".
 
+*  Improve robustness of `corpus.VCorpus()` for constructing a corpus from a tm Corpus object.
+
 Bug fixes
 ---------
 *  Fixed a false-alarm warning message in textmodel_wordfish()
 
 *  Argument defaults for readability.corpus() now same as readability.character().  Fixes #107.
+
+*  Fixed a bug causing LIWC format dictionary imports to fail if extra characters followed the closing % in the file header.
+
+*  Fixed a bug in applyDictionary(x, dictionary, exclusive = FALSE) when the dictionary produced no matches at all, caused by an attempt to negative index a NULL.  #115
+
+*  Fixed #117, a bug where wordstem.tokenizedTexts() removed attributes from the object, causing a failure of dfm.tokenizedTexts().
+
+*  Fixed #119, a bug in selectFeatures.tokenizedTexts(x, features, selection = "remove") that returned a NULL for a document's tokens when no matching pattern for removal was found.
 
 
 quanteda 0.9.4

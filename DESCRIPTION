@@ -53,10 +53,14 @@ LazyData: TRUE
 VignetteBuilder: knitr
 Collate:
     'RcppExports.R'
+    'corpus.R'
     'dictionaries.R'
     'collocations.R'
     'converters.R'
-    'corpus.R'
+    'settings.R'
+    'corpusTagged-class.R'
+    'tokenize.R'
+    'corpusTagged-methods.R'
     'dataDocs.R'
     'describe-texts.R'
     'dfm-classes.R'
@@ -72,7 +76,6 @@ Collate:
     'readability.R'
     'resample.R'
     'selectFeatures.R'
-    'settings.R'
     'similarity.R'
     'stopwords.R'
     'syllables.R'
@@ -83,7 +86,6 @@ Collate:
     'textmodel-wordfish.R'
     'textmodel-wordscores.R'
     'toLower.R'
-    'tokenize.R'
     'tokenize_outtakes.R'
     'wordstem.R'
 RoxygenNote: 5.0.1

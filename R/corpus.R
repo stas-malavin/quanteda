@@ -42,6 +42,9 @@ corpus <- function(x, ...) {
     UseMethod("corpus")
 }
 
+# give it an S4 attribute too, for inheritance
+setOldClass("corpus")
+
 
 # @param enc a string specifying the input encoding for texts in the corpus. 
 #   Must be a valid entry in \code{\link[stringi]{stri_enc_list}()}, since 
@@ -400,19 +403,39 @@ texts.character <- function(x, groups = NULL, ...) {
 }
 
 
-# -- REMOVED
-# -- REMOVED - CORPUS TEXTS SHOULD NOT BE MODIFIED IN THIS WAY
-# -- REMOVED
-# replacement function for texts
-# warning about no data
-# @param value character vector of the new texts
-# @rdname texts
-# @export
-"texts<-" <- function(corp, value) { #}, rownames=FALSE) {
-    documents(corp)$texts <- value
-    # if (rownames) rownames(documents(corp)) <- names(value) 
-    return(corp)
+#' @param value character vector of the new texts
+#' @rdname texts
+#' @export
+"texts<-" <- function(x, value) {
+    UseMethod("texts<-")
 }
+
+#' @rdname texts
+#' @export
+#' @note You are strongly encouraged as a good practice of text analysis 
+#'   workflow \emph{not} to modify the substance of the texts in a corpus. 
+#'   Rather, this sort of processing is better performed through downstream 
+#'   operations.  For instance, do not lowercase the texts in a corpus, or you 
+#'   will never be able to recover the original case.  Rather, apply 
+#'   \code{\link{toLower}} to the corpus and use the result as an input, e.g. to
+#'   \code{\link{tokenize}}.
+#' @examples 
+#' 
+#' BritCorpus <- corpus(c("We must prioritise honour in our neighbourhood.", 
+#'                        "Aluminium is a valourous metal."))
+#' texts(BritCorpus) <- 
+#'     stringi::stri_replace_all_regex(texts(BritCorpus),
+#'                                    c("ise", "([nlb])our", "nium"),
+#'                                    c("ize", "$1or", "num"),
+#'                                    vectorize_all = FALSE)
+#' texts(BritCorpus)
+#' texts(BritCorpus)[2] <- "New text number 2."
+#' texts(BritCorpus)
+"texts<-.corpus" <- function(x, value) { 
+    documents(x)$texts <- value
+    x
+}
+
 
 #' get or set document-level meta-data
 #' 

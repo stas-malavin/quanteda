@@ -154,3 +154,5 @@ settingsGet <- function(corp, match.call.list) {
 # removeDigits=TRUE, removePunct=TRUE, lower=TRUE,                          
 # addto=NULL
 
+setOldClass("settings")
+

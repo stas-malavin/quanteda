@@ -1,4 +1,5 @@
 #' @include dictionaries.R
+#' @include corpus.R
 NULL
 
 #' Detect collocations from text
@@ -353,6 +354,8 @@ setGeneric("phrasetotoken",
 #     UseMethod("phrasetotoken")
 # }
 
+setOldClass("collocations")
+
 #' @rdname phrasetotoken
 #' @export
 setMethod("phrasetotoken", signature=c("character", "dictionary", "ANY"), 
@@ -381,17 +384,33 @@ setMethod("phrasetotoken", signature=c("character", "dictionary", "ANY"),
 #  need an S3 method for the S3 corpus object
 #' @rdname phrasetotoken
 #' @export
-phrasetotoken.corpus <- function(object, phrases, concatenator="_") {
-    texts(object) <- phrasetotoken(texts(object), phrases, concatenator)
-    object
-}
+setMethod("phrasetotoken", signature = c("corpus", "dictionary", "ANY"), 
+          function(object, phrases, concatenator="_") {
+              texts(object) <- phrasetotoken(texts(object), phrases, concatenator)
+              object
+          })
+
+#' @rdname phrasetotoken
+#' @export
+setMethod("phrasetotoken", signature = c("corpus", "collocations", "ANY"), 
+          function(object, phrases, concatenator="_") {
+              texts(object) <- phrasetotoken(texts(object), phrases, concatenator)
+              object
+          })
+
+
+
+# phrasetotoken.corpus <- function(object, phrases, concatenator="_") {
+#     texts(object) <- phrasetotoken(texts(object), phrases, concatenator)
+#     object
+# }
 
 
 setClass("collocations", contains = "data.table")
 
 #' @rdname phrasetotoken
 #' @export
-setMethod("phrasetotoken", signature=c("character", "collocations", "ANY"), 
+setMethod("phrasetotoken", signature = c("character", "collocations", "ANY"), 
           function(object, phrases, concatenator="_") {
               word1 <- word2 <- word3 <- NULL
               # concatenate the words                               

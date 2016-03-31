@@ -41,13 +41,11 @@ void skip(std::vector< std::string > &tokens,
 }
 
 // [[Rcpp::export]]
-std::vector< std::string > skipgramcpp(std::vector< std::string > tokens,
-                                    std::vector< int > ns, 
-                                    std::vector< int > ks, 
-                                    std::string delim 
-){
-  
-  
+StringVector skipgramcpp(std::vector < std::string > tokens,
+                                    std::vector < int > ns, 
+                                    std::vector < int > ks, 
+                                    std::string delim) {
+
   // Generate skipgrams recursively
   std::vector<std::string> ngram;
   std::vector< std::vector<std::string> > ngrams; // For the rerusive function
@@ -61,33 +59,16 @@ std::vector< std::string > skipgramcpp(std::vector< std::string > tokens,
     }
   }
   
-  // Join elemtns of ngrams
-  std::vector< std::string > tokens_ngram;
+  // Join elements of ngrams
+  StringVector tokens_ngram;
   int len_ngrams = ngrams.size();
   for (int h = 0; h < len_ngrams; h++) {
-    tokens_ngram.push_back(join(ngrams[h], delim));
+    Rcpp::String str(join(ngrams[h], delim));
+    str.set_encoding(CE_UTF8);
+    tokens_ngram.push_back(str);
   }
   return tokens_ngram;
 }
 
 
-
-// [[Rcpp::export]]
-std::vector< std::vector<std::string> > skipgramcppl(SEXP units,
-                                                     std::vector< int > ns, 
-                                                     std::vector< int > ks,
-                                                     std::string delim){
-  
-  //Rcpp::CharacterVector units(list);                                     
-  Rcpp::List units_in(units);
-  std::vector< std::vector<std::string> > units_out;
-  
-  int len_units = units_in.size();
-  for (int g=0; g < len_units; g++){
-    //Rcout << "Unit" << g << "\n";
-    std::vector <std::string> tokens = units_in[g];
-    units_out.push_back(skipgramcpp(tokens, ns, ks, delim));
-  }
-  return units_out;
-}
 

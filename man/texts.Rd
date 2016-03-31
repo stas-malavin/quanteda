@@ -5,6 +5,8 @@
 \alias{texts.character}
 \alias{texts.corpus}
 \alias{texts.corpusSource}
+\alias{texts<-}
+\alias{texts<-.corpus}
 \title{get corpus texts}
 \usage{
 texts(x, groups = NULL, ...)
@@ -12,6 +14,10 @@ texts(x, groups = NULL, ...)
 \method{texts}{corpus}(x, groups = NULL, ...)
 
 \method{texts}{character}(x, groups = NULL, ...)
+
+texts(x) <- value
+
+\method{texts}{corpus}(x) <- value
 
 \method{texts}{corpusSource}(x, groups = NULL, ...)
 }
@@ -24,6 +30,8 @@ aggregating the texts through concatenation.  If \code{x} is of type character,
 then \code{groups} must be a factor.}
 
 \item{...}{unused}
+
+\item{value}{character vector of the new texts}
 }
 \value{
 For \code{texts}, a character vector of the texts in the corpus.
@@ -34,6 +42,15 @@ For \code{texts}, a character vector of the texts in the corpus.
 Get the texts in a quanteda corpus object, with grouping options.  Works for plain character
 vectors too, if \code{groups} is a factor.
 }
+\note{
+You are strongly encouraged as a good practice of text analysis 
+  workflow \emph{not} to modify the substance of the texts in a corpus. 
+  Rather, this sort of processing is better performed through downstream 
+  operations.  For instance, do not lowercase the texts in a corpus, or you 
+  will never be able to recover the original case.  Rather, apply 
+  \code{\link{toLower}} to the corpus and use the result as an input, e.g. to
+  \code{\link{tokenize}}.
+}
 \examples{
 nchar(texts(subset(inaugCorpus, Year < 1806)))
 
@@ -43,5 +60,16 @@ nchar(texts(subset(inaugCorpus, Year < 1806), groups = "President"))
 # grouping a character vector using a factor
 nchar(inaugTexts[1:5])
 nchar(texts(inaugTexts[1:5], groups = as.factor(inaugCorpus[1:5, "President"])))
+
+BritCorpus <- corpus(c("We must prioritise honour in our neighbourhood.", 
+                       "Aluminium is a valourous metal."))
+texts(BritCorpus) <- 
+    stringi::stri_replace_all_regex(texts(BritCorpus),
+                                   c("ise", "([nlb])our", "nium"),
+                                   c("ize", "$1or", "num"),
+                                   vectorize_all = FALSE)
+texts(BritCorpus)
+texts(BritCorpus)[2] <- "New text number 2."
+texts(BritCorpus)
 }
 

@@ -5,7 +5,8 @@
 \alias{phrasetotoken}
 \alias{phrasetotoken,character,collocations-method}
 \alias{phrasetotoken,character,dictionary-method}
-\alias{phrasetotoken.corpus}
+\alias{phrasetotoken,corpus,collocations-method}
+\alias{phrasetotoken,corpus,dictionary-method}
 \title{convert phrases into single tokens}
 \usage{
 phrasetotoken(object, phrases, concatenator = "_")
@@ -13,7 +14,11 @@ phrasetotoken(object, phrases, concatenator = "_")
 \S4method{phrasetotoken}{character,dictionary}(object, phrases,
   concatenator = "_")
 
-phrasetotoken.corpus(object, phrases, concatenator = "_")
+\S4method{phrasetotoken}{corpus,dictionary}(object, phrases,
+  concatenator = "_")
+
+\S4method{phrasetotoken}{corpus,collocations}(object, phrases,
+  concatenator = "_")
 
 \S4method{phrasetotoken}{character,collocations}(object, phrases,
   concatenator = "_")

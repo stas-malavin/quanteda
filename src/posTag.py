@@ -26,7 +26,7 @@ args = ap.parse_args()
 nlp = spacy.en.English()
 for line in sys.stdin:
 	outs = ""
-	line = re.sub(' +',' ',line.strip())
+	line = re.sub(' +', ' ', line.strip())
 	taggedWords = nlp(unicode(line), tag=True, parse=False)
 	for w in taggedWords:
 		thisTag = w.tag_ if args.penn else w.pos_

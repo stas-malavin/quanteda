@@ -35,8 +35,9 @@ Imports:
     parallel,
     Rcpp,
     ca,
-    stringi
-LinkingTo: Rcpp, RcppArmadillo
+    stringi,
+    RcppParallel
+LinkingTo: Rcpp, RcppArmadillo, RcppParallel
 Suggests:
     knitr,
     lda,
@@ -96,4 +97,4 @@ Collate:
     'wordstem.R'
     'zzz.R'
 RoxygenNote: 5.0.1
-SystemRequirements: C++11
+SystemRequirements: GNU make, C++11

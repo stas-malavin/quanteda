@@ -1,5 +1,4 @@
 #include <Rcpp.h>
-#include <set>
 #include <vector>
 // [[Rcpp::depends(RcppParallel)]]
 #include <RcppParallel.h>
@@ -22,17 +21,13 @@ struct select_tokens : public Worker
   
   // parallelFor calles this function with size_t
   void operator()(std::size_t begin, std::size_t end) {  
-    //Rcout << "Begin: " << begin << ", End: " << end << "\n";
     CharacterVector text = input[begin];
     Rcpp::CharacterVector text_temp(text.size()); // make vector in the same length as original
     int j = 0;
     for (int i=0; i < text.size(); i++){
       String token = text[i];
-      //Rcout << "Now " << i << ' ' << token.get_cstring() << "\n";
       bool is_in = set_types.find(token) != set_types.end();
-      
       if(is_in == remove){
-        //Rcout << "Match " << i << ' ' << token.get_cstring() << "\n";
         if(spacer){
           text_temp[j] = "";
           j++;
@@ -43,7 +38,7 @@ struct select_tokens : public Worker
       }
     }
     if(j == 0){
-      text = Rcpp::CharacterVector(); // nothing left
+      text = CharacterVector(); // nothing left
     }else{
       text = text_temp[seq(0, j - 1)];
     }
@@ -52,7 +47,7 @@ struct select_tokens : public Worker
 };
 
 // [[Rcpp::export]]
-List select_tokens_cppl_para(List input, 
+List select_tokens_cppl_mt(List input, 
                              CharacterVector &types,
                              const bool &remove,
                              const bool &spacer) {
@@ -74,7 +69,6 @@ List select_tokens_cppl_para(List input,
   // return the output matrix
   return output;
 }
-
 
 
 /*** R

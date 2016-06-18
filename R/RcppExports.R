@@ -25,6 +25,10 @@ select_tokens_cppl <- function(texts, flags, types, remove, spacer) {
     invisible(.Call('quanteda_select_tokens_cppl', PACKAGE = 'quanteda', texts, flags, types, remove, spacer))
 }
 
+select_tokens_cppl_mt <- function(input, types, remove, spacer) {
+    .Call('quanteda_select_tokens_cppl_mt', PACKAGE = 'quanteda', input, types, remove, spacer)
+}
+
 split_df_cpp <- function(df) {
     .Call('quanteda_split_df_cpp', PACKAGE = 'quanteda', df)
 }

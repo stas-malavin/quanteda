@@ -86,6 +86,20 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// select_tokens_cppl_mt
+List select_tokens_cppl_mt(List input, CharacterVector& types, const bool& remove, const bool& spacer);
+RcppExport SEXP quanteda_select_tokens_cppl_mt(SEXP inputSEXP, SEXP typesSEXP, SEXP removeSEXP, SEXP spacerSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< List >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< CharacterVector& >::type types(typesSEXP);
+    Rcpp::traits::input_parameter< const bool& >::type remove(removeSEXP);
+    Rcpp::traits::input_parameter< const bool& >::type spacer(spacerSEXP);
+    __result = Rcpp::wrap(select_tokens_cppl_mt(input, types, remove, spacer));
+    return __result;
+END_RCPP
+}
 // split_df_cpp
 std::vector<CharacterVector> split_df_cpp(DataFrame df);
 RcppExport SEXP quanteda_split_df_cpp(SEXP dfSEXP) {

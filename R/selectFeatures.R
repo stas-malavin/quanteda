@@ -308,6 +308,73 @@ selectFeatures.tokenizedTexts <- function(x, features, selection = c("keep", "re
     return(y)
 }
 
+#' Parallel version of selectFeatures
+#' @inheritParams selectFeatures.tokenizedTexts
+#' @export
+#' @examples 
+#' data(SOTUCorpus, package = "quantedaData")
+#' toks <- tokenize(SOTUCorpus, removePunct = TRUE)
+#' # head to head, old v. new
+#' system.time(selectFeaturesParallel.tokenizedTexts(toks, stopwords("english"), "remove", verbose = FALSE))
+#' microbenchmark::microbenchmark(
+#'     para = selectFeaturesParallel.tokenizedTexts(toks, stopwords("english"), "remove", verbose = FALSE),
+#'     seri = selectFeatures(toks, stopwords("english"), "remove", verbose = FALSE),
+#'     times = 5, unit = "relative")
+selectFeaturesParallel.tokenizedTexts <- function(x, features, selection = c("keep", "remove"), 
+                                          valuetype = c("glob", "regex", "fixed"),
+                                          case_insensitive = TRUE, padding = FALSE,                                   verbose = FALSE, ...) {
+  selection <- match.arg(selection)
+  valuetype <- match.arg(valuetype)
+  originalvaluetype <- valuetype
+  features <- unique(unlist(features, use.names=FALSE))  # to convert any dictionaries
+  y <- deepcopy(x) # copy x to y to prevent changes in x
+  n <- length(y)
+  
+  # convert glob to fixed if no actual glob characters (since fixed is much faster)
+  if (valuetype == "glob") {
+    # treat as fixed if no glob characters detected
+    if (!sum(stringi::stri_detect_charclass(features, c("[*?]"))))
+      valuetype <- "fixed"
+    else {
+      features <- sapply(features, utils::glob2rx, USE.NAMES = FALSE)
+      valuetype <- "regex"
+    }
+  }
+  
+  if (valuetype == "fixed") {
+    
+    if (case_insensitive) {
+      #types <- unique(unlist(y, use.names=FALSE))
+      types_match <- types[toLower(types) %in% toLower(features)]
+    } else {
+      types_match <- features
+    }
+    if (indexing) flag <- Matrix::rowSums(index_binary[,types_match]) > 0 # identify texts where types match appear
+    if (verbose) cat(sprintf("Scanning %.2f%% of texts...\n", 100 * sum(flag) / n))
+    if(selection == "remove"){
+      select_tokens_cppl_mt(y, types_match, TRUE, padding)
+    }else{ 
+      select_tokens_cppl_mt(y, types_match, FALSE, padding)
+    }
+  } else if (valuetype == "regex") {
+    if (verbose) cat("Converting regex to fixed...\n")
+    types_match <- regex2fixed(features, types, case_insensitive) # get all the unique types that match regex
+    if(indexing) flag <- Matrix::rowSums(index_binary[,types_match]) > 0 # identify texts where types match appear
+    if(verbose) cat(sprintf("Scanning %.2f%% of texts...\n", 100 * sum(flag) / n))
+    if (selection == "remove") {
+      select_tokens_cppl_mt(y, types_match, TRUE, padding)  # search as fixed
+    } else {
+      select_tokens_cppl_mt(y, types_match, FALSE, padding) # search as fixed
+    }
+  }
+  
+  class(y) <- c("tokenizedTexts", class(x))
+  attributes(y) <- attributes(x)
+  return(y)
+}
+
+
+
 #' @rdname selectFeatures
 #' @param pos indexes of word position if called on collocations: remove if word
 #'   \code{pos} is a stopword

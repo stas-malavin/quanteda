@@ -327,7 +327,7 @@ selectFeaturesParallel.tokenizedTexts <- function(x, features, selection = c("ke
   valuetype <- match.arg(valuetype)
   originalvaluetype <- valuetype
   features <- unique(unlist(features, use.names=FALSE))  # to convert any dictionaries
-  y <- deepcopy(x) # copy x to y to prevent changes in x
+  
   n <- length(y)
   
   # convert glob to fixed if no actual glob characters (since fixed is much faster)
@@ -344,7 +344,6 @@ selectFeaturesParallel.tokenizedTexts <- function(x, features, selection = c("ke
   if (valuetype == "fixed") {
     
     if (case_insensitive) {
-      #types <- unique(unlist(y, use.names=FALSE))
       types_match <- types[toLower(types) %in% toLower(features)]
     } else {
       types_match <- features
@@ -352,9 +351,9 @@ selectFeaturesParallel.tokenizedTexts <- function(x, features, selection = c("ke
     if (indexing) flag <- Matrix::rowSums(index_binary[,types_match]) > 0 # identify texts where types match appear
     if (verbose) cat(sprintf("Scanning %.2f%% of texts...\n", 100 * sum(flag) / n))
     if(selection == "remove"){
-      select_tokens_cppl_mt(y, types_match, TRUE, padding)
+      y <- select_tokens_cppl_mt(x, types_match, TRUE, padding)
     }else{ 
-      select_tokens_cppl_mt(y, types_match, FALSE, padding)
+      y <- select_tokens_cppl_mt(x, types_match, FALSE, padding)
     }
   } else if (valuetype == "regex") {
     if (verbose) cat("Converting regex to fixed...\n")
@@ -362,9 +361,9 @@ selectFeaturesParallel.tokenizedTexts <- function(x, features, selection = c("ke
     if(indexing) flag <- Matrix::rowSums(index_binary[,types_match]) > 0 # identify texts where types match appear
     if(verbose) cat(sprintf("Scanning %.2f%% of texts...\n", 100 * sum(flag) / n))
     if (selection == "remove") {
-      select_tokens_cppl_mt(y, types_match, TRUE, padding)  # search as fixed
+      y <- select_tokens_cppl_mt(x, types_match, TRUE, padding)  # search as fixed
     } else {
-      select_tokens_cppl_mt(y, types_match, FALSE, padding) # search as fixed
+      y <- select_tokens_cppl_mt(x, types_match, FALSE, padding) # search as fixed
     }
   }
   

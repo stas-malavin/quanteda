@@ -28,11 +28,13 @@ struct select_tokens : public Worker
       String token = text[i];
       bool is_in = set_types.find(token) != set_types.end();
       if(is_in == remove){
+        //Rcout << "Match " << i << ' ' << token.get_cstring() << "\n";
         if(spacer){
           text_temp[j] = "";
           j++;
         }
       }else{
+        
         text_temp[j] = token;
         j++;
       }
@@ -74,6 +76,7 @@ List select_tokens_cppl_mt(List input,
 /*** R
 
 toks <- list(letters, LETTERS)
-select_tokens_cppl_mt(toks, c('b', 'O', 'g', 'N'), TRUE, TRUE)
+#select_tokens_cppl_mt(toks, c('b', 'O', 'g', 'N'), TRUE, TRUE)
+select_tokens_cppl_mt(toks, c('b', 'O', 'g', 'N'), FALSE, TRUE)
 
 */

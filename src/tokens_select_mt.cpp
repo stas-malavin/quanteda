@@ -20,31 +20,33 @@ struct select_tokens : public Worker
                 input(input), output(output), set_types(set_types), remove(remove), spacer(spacer){}
   
   // parallelFor calles this function with size_t
-  void operator()(std::size_t begin, std::size_t end) {  
-    CharacterVector text = input[begin];
-    Rcpp::CharacterVector text_temp(text.size()); // make vector in the same length as original
-    int j = 0;
-    for (int i=0; i < text.size(); i++){
-      String token = text[i];
-      bool is_in = set_types.find(token) != set_types.end();
-      if(is_in == remove){
-        //Rcout << "Match " << i << ' ' << token.get_cstring() << "\n";
-        if(spacer){
-          text_temp[j] = "";
+  void operator()(std::size_t begin, std::size_t end){
+    //Rcout << "Range " << begin << " " << end << "\n";
+    for (int h = begin; h < end; h++){
+      //Rcout << "H " << h << "\n";
+      CharacterVector text = input[h];
+      CharacterVector text_temp(text.size()); // make vector in the same length as original
+      int j = 0;
+      for (int i = 0; i < text.size(); i++){
+        String token = text[i];
+        bool is_in = set_types.find(token) != set_types.end();
+        if(is_in == remove){
+          //Rcout << "Match " << i << ' ' << token.get_cstring() << "\n";
+          if(spacer){
+            text_temp[j] = "";
+            j++;
+          }
+        }else{
+          text_temp[j] = token;
           j++;
         }
+      }
+      if(j == 0){
+        output[h] = CharacterVector(); // nothing left
       }else{
-        
-        text_temp[j] = token;
-        j++;
+        output[h] = text_temp[seq(0, j - 1)];
       }
     }
-    if(j == 0){
-      text = CharacterVector(); // nothing left
-    }else{
-      text = text_temp[seq(0, j - 1)];
-    }
-    output[begin] = text;
   }
 };
 
@@ -77,6 +79,6 @@ List select_tokens_cppl_mt(List input,
 
 toks <- list(letters, LETTERS)
 #select_tokens_cppl_mt(toks, c('b', 'O', 'g', 'N'), TRUE, TRUE)
-select_tokens_cppl_mt(toks, c('b', 'O', 'g', 'N'), FALSE, TRUE)
+select_tokens_cppl_mt(rep(toks, 1000), c('b', 'O', 'g', 'N'), FALSE, TRUE)
 
 */

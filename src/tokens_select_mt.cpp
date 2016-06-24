@@ -68,7 +68,7 @@ List select_tokens_cppl_mt(List input,
   select_tokens select_tokens(input, output, set_types, remove, spacer);
   
   // call parallelFor to do the work
-  parallelFor(0, input.length(), select_tokens);
+  parallelFor(0, input.size(), select_tokens);
   
   // return the output matrix
   return output;

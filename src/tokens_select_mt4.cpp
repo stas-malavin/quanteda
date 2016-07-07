@@ -8,9 +8,6 @@
 #include <unordered_set>
 using namespace Rcpp;
 using namespace RcppParallel;
-std::mutex lock_input4;
-std::mutex lock_output4;
-
 
 struct select_tokens4 : public Worker
 {
@@ -19,6 +16,8 @@ struct select_tokens4 : public Worker
   const std::unordered_set<int> set_types;
   const bool remove;
   const bool spacer;
+  //std::mutex lock_input4;
+  std::mutex lock_output4;
   
   // Constructor
   select_tokens4(const List input, List output, const std::unordered_set<int> set_types, bool remove, bool spacer): 
@@ -29,12 +28,11 @@ struct select_tokens4 : public Worker
     //Rcout << "Range " << begin << " " << end << "\n";
     for (int h = begin; h < end; h++){
       //Rcout << "H " << h << "\n";
-      lock_input4.lock();
+      //lock_input4.lock();
       std::vector<int> text = input[h];
-      //std::vector<int> text_temp(text.size()); // make vector in the same length as original
-      lock_input4.unlock();
+      //lock_input4.unlock();
       
-      std::vector<int> text_temp(text.size());
+      std::vector<int> text_temp(text.size());// make vector in the same length as original
       
       int j = 0;
       for (int i = 0; i < text.size(); i++){
@@ -96,7 +94,7 @@ List select_tokens_cppl_mt4(List input,
 
 /*** R
 
-#toks <- list(1:50, 200:250)
-#out <-  select_tokens_cppl_mt4(rep(toks, 1000000), c(10, 50, 220, 230), FALSE, TRUE)
+toks <- list(1:50, 200:250)
+out <-  select_tokens_cppl_mt4(rep(toks, 1000000), c(10, 50, 220, 230), FALSE, TRUE)
 
 */

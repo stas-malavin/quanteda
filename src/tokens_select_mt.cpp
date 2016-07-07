@@ -31,40 +31,48 @@ struct select_tokens : public Worker
       //Rcout << "H " << h << "\n";
       lock_input.lock();
       CharacterVector text = input[h];
+      //CharacterVector text_temp(text.size()); // make vector in the same length as original
       lock_input.unlock();
       
-      CharacterVector text_temp(text.size()); // make vector in the same length as original
-      int j = 0;
-      for (int i = 0; i < text.size(); i++){
-        String token = text[i];
-        bool is_in = set_types.find(token) != set_types.end();
-        if(is_in == remove){
-          //Rcout << "Match " << i << ' ' << token.get_cstring() << "\n";
-          if(spacer){
-            text_temp[j] = "";
-            j++;
-          }
-        }else{
-          text_temp[j] = token;
-          j++;
-        }
-      }
+      //std::vector<std::string> text_temp(text.size());
+      
+      // int j = 0;
+      // for (int i = 0; i < text.size(); i++){
+      //   String token = text[i];
+      //   bool is_in = set_types.find(token) != set_types.end();
+      //   if(is_in == remove){
+      //     //Rcout << "Match " << i << ' ' << token.get_cstring() << "\n";
+      //     if(spacer){
+      //       text_temp[j] = "";
+      //       j++;
+      //     }
+      //   }else{
+      //     text_temp[j] = token;
+      //     j++;
+      //   }
+      // }
+      // 
+      // lock_output.lock();
+      // if(j == 0){
+      //   output[h] = CharacterVector(); // nothing left
+      // }else{
+      //   output[h] = text_temp[seq(0, j - 1)];
+      // }
+      // lock_output.unlock();
       lock_output.lock();
-      if(j == 0){
-        output[h] = CharacterVector(); // nothing left
-      }else{
-        output[h] = text_temp[seq(0, j - 1)];
-      }
+      output[h] = text;
       lock_output.unlock();
+      
     }
+    return;
   }
 };
 
 // [[Rcpp::export]]
 List select_tokens_cppl_mt(List input, 
-                             CharacterVector &types,
-                             const bool &remove,
-                             const bool &spacer) {
+                           CharacterVector &types,
+                           const bool &remove,
+                           const bool &spacer) {
   
   // allocate the output matrix
   List output(input.size());
@@ -89,6 +97,7 @@ List select_tokens_cppl_mt(List input,
 
 toks <- list(letters, LETTERS)
 #select_tokens_cppl_mt(toks, c('b', 'O', 'g', 'N'), TRUE, TRUE)
-select_tokens_cppl_mt(rep(toks, 100), c('b', 'O', 'g', 'N'), FALSE, TRUE)
-
+out <- replicate(100,
+  select_tokens_cppl_mt(rep(toks, 10000), c('b', 'O', 'g', 'N'), FALSE, TRUE)
+)
 */

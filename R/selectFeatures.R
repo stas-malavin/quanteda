@@ -327,8 +327,7 @@ selectFeaturesParallel.tokenizedTexts <- function(x, features, selection = c("ke
   valuetype <- match.arg(valuetype)
   originalvaluetype <- valuetype
   features <- unique(unlist(features, use.names=FALSE))  # to convert any dictionaries
-  
-  n <- length(y)
+  types <- unique(unlist(x, use.names=FALSE))
   
   # convert glob to fixed if no actual glob characters (since fixed is much faster)
   if (valuetype == "glob") {
@@ -348,7 +347,6 @@ selectFeaturesParallel.tokenizedTexts <- function(x, features, selection = c("ke
     } else {
       types_match <- features
     }
-    if (indexing) flag <- Matrix::rowSums(index_binary[,types_match]) > 0 # identify texts where types match appear
     if (verbose) cat(sprintf("Scanning %.2f%% of texts...\n", 100 * sum(flag) / n))
     if(selection == "remove"){
       y <- select_tokens_cppl_mt(x, types_match, TRUE, padding)

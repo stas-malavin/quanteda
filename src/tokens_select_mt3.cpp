@@ -7,8 +7,8 @@
 #include <unordered_set>
 using namespace Rcpp;
 using namespace RcppParallel;
-std::mutex lock_input;
-std::mutex lock_output;
+std::mutex lock_input3;
+std::mutex lock_output3;
 
 struct select_tokens3 : public Worker
 {
@@ -27,13 +27,13 @@ struct select_tokens3 : public Worker
     
     std::vector<CharacterVector> texts(end - begin + 1);
     int f = 0;
-    lock_input.lock();
+    lock_input3.lock();
     //Rcout << "Range " << begin << " " << end << "\n";
     for (int g = begin; g < end + 1; g++){ 
       texts[f] = input[g];
       f++;
     }
-    lock_input.unlock();
+    lock_input3.unlock();
     
     return;
     for (int h = 0; h < texts.size(); h++){

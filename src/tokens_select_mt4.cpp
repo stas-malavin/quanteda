@@ -8,8 +8,8 @@
 #include <unordered_set>
 using namespace Rcpp;
 using namespace RcppParallel;
-std::mutex lock_input;
-std::mutex lock_output;
+std::mutex lock_input4;
+std::mutex lock_output4;
 
 
 struct select_tokens4 : public Worker
@@ -29,10 +29,10 @@ struct select_tokens4 : public Worker
     //Rcout << "Range " << begin << " " << end << "\n";
     for (int h = begin; h < end; h++){
       //Rcout << "H " << h << "\n";
-      lock_input.lock();
+      lock_input4.lock();
       std::vector<int> text = input[h];
       //std::vector<int> text_temp(text.size()); // make vector in the same length as original
-      lock_input.unlock();
+      lock_input4.unlock();
       
       std::vector<int> text_temp(text.size());
       
@@ -52,14 +52,14 @@ struct select_tokens4 : public Worker
         }
       }
 
-      lock_output.lock();
+      lock_output4.lock();
       if(j == 0){
         output[h] = std::vector<int>(); // nothing left
       }else{
         text_temp.resize(j);
         output[h] = text_temp;
       }
-      lock_output.unlock();
+      lock_output4.unlock();
       // lock_output.lock();
       // output[h] = text;
       // lock_output.unlock();

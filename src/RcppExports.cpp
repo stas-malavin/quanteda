@@ -114,6 +114,20 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// select_tokens_cppl_mt4
+List select_tokens_cppl_mt4(List input, std::vector<int>& types, const bool& remove, const bool& spacer);
+RcppExport SEXP quanteda_select_tokens_cppl_mt4(SEXP inputSEXP, SEXP typesSEXP, SEXP removeSEXP, SEXP spacerSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< List >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< std::vector<int>& >::type types(typesSEXP);
+    Rcpp::traits::input_parameter< const bool& >::type remove(removeSEXP);
+    Rcpp::traits::input_parameter< const bool& >::type spacer(spacerSEXP);
+    __result = Rcpp::wrap(select_tokens_cppl_mt4(input, types, remove, spacer));
+    return __result;
+END_RCPP
+}
 // select_tokens_cppl_mt
 List select_tokens_cppl_mt(List input, CharacterVector& types, const bool& remove, const bool& spacer);
 RcppExport SEXP quanteda_select_tokens_cppl_mt(SEXP inputSEXP, SEXP typesSEXP, SEXP removeSEXP, SEXP spacerSEXP) {

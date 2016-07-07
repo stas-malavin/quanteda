@@ -33,6 +33,10 @@ select_tokens_cppl_mt3 <- function(x, types, remove, spacer) {
     .Call('quanteda_select_tokens_cppl_mt3', PACKAGE = 'quanteda', x, types, remove, spacer)
 }
 
+select_tokens_cppl_mt4 <- function(input, types, remove, spacer) {
+    .Call('quanteda_select_tokens_cppl_mt4', PACKAGE = 'quanteda', input, types, remove, spacer)
+}
+
 select_tokens_cppl_mt <- function(input, types, remove, spacer) {
     .Call('quanteda_select_tokens_cppl_mt', PACKAGE = 'quanteda', input, types, remove, spacer)
 }

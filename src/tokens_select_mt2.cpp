@@ -7,7 +7,7 @@
 using namespace Rcpp;
 using namespace RcppParallel;
 
-struct select_tokens : public Worker
+struct select_tokens2 : public Worker
 {
   std::vector<CharacterVector> &input;
   std::vector<CharacterVector> &output;
@@ -16,7 +16,7 @@ struct select_tokens : public Worker
   const bool spacer;
   
   // Constructor
-  select_tokens(std::vector<CharacterVector> &input, std::vector<CharacterVector> &output, const std::unordered_set<String> set_types, bool remove, bool spacer): 
+  select_tokens2(std::vector<CharacterVector> &input, std::vector<CharacterVector> &output, const std::unordered_set<String> set_types, bool remove, bool spacer): 
                 input(input), output(output), set_types(set_types), remove(remove), spacer(spacer){}
   
   // parallelFor calles this function with size_t
@@ -51,7 +51,7 @@ struct select_tokens : public Worker
 };
 
 // [[Rcpp::export]]
-List select_tokens_cppl_mt(SEXP x, 
+List select_tokens_cppl_mt2(SEXP x, 
                              CharacterVector &types,
                              const bool &remove,
                              const bool &spacer) {
@@ -65,10 +65,10 @@ List select_tokens_cppl_mt(SEXP x,
   }
   
   // SquareRoot functor (pass input and output matrixes)
-  select_tokens select_tokens(input, output, set_types, remove, spacer);
+  select_tokens2 select_tokens2(input, output, set_types, remove, spacer);
   
   // call parallelFor to do the work
-  parallelFor(0, input.size(), select_tokens);
+  parallelFor(0, input.size(), select_tokens2);
   
   return wrap(output);
 }
@@ -78,6 +78,6 @@ List select_tokens_cppl_mt(SEXP x,
 
 toks <- list(letters, LETTERS)
 #select_tokens_cppl_mt(toks, c('b', 'O', 'g', 'N'), TRUE, TRUE)
-select_tokens_cppl_mt(rep(toks, 1000), c('b', 'O', 'g', 'N'), FALSE, TRUE)
+#select_tokens_cppl_mt(rep(toks, 1000), c('b', 'O', 'g', 'N'), FALSE, TRUE)
 
 */

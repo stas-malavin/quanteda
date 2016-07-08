@@ -311,6 +311,7 @@ selectFeatures.tokenizedTexts <- function(x, features, selection = c("keep", "re
 #' Parallel version of selectFeatures
 #' @inheritParams selectFeatures.tokenizedTexts
 #' @export
+#' @importFrom RcppParallel RcppParallelLibs
 #' @examples 
 #' data(SOTUCorpus, package = "quantedaData")
 #' toks <- tokenize(SOTUCorpus, removePunct = TRUE)
@@ -322,7 +323,7 @@ selectFeatures.tokenizedTexts <- function(x, features, selection = c("keep", "re
 #'     times = 5, unit = "relative")
 selectFeaturesParallel.tokenizedTexts <- function(x, features, selection = c("keep", "remove"), 
                                           valuetype = c("glob", "regex", "fixed"),
-                                          case_insensitive = TRUE, padding = FALSE,                                   verbose = FALSE, ...) {
+                                          case_insensitive = TRUE, padding = FALSE, verbose = FALSE, ...) {
   selection <- match.arg(selection)
   valuetype <- match.arg(valuetype)
   originalvaluetype <- valuetype
@@ -370,6 +371,33 @@ selectFeaturesParallel.tokenizedTexts <- function(x, features, selection = c("ke
   return(y)
 }
 
+#' Parallel version of selectFeatures for index tokens
+#' @inheritParams selectFeatures.tokenizedTexts
+#' @importFrom RcppParallel RcppParallelLibs
+#' @examples
+#' library(fastmatch)
+#' data(SOTUCorpus, package = "quantedaData")
+#' toks <- tokenize(SOTUCorpus, removePunct = TRUE)
+#' types <- unique(unlist(toks, use.names=FALSE))
+#' toks_index <- lapply(toks, function(x, y) match(x, y), types)
+#' stopwords_index <- match(stopwords("english"), types)
+#' stopwords_index <- stopwords_index[!is.na(stopwords_index)]
+#' microbenchmark::microbenchmark(
+#'    seri = selectFeatures(toks, stopwords("english"), "remove", verbose = FALSE),
+#'    para = selectFeaturesParallel.indexedTexts(toks_index, stopwords_index, "remove")
+#' )
+#' @export
+selectFeaturesParallel.indexedTexts <- function(x, features, selection = c("keep", "remove"), 
+                                                valuetype = c("glob", "regex", "fixed"),
+                                                case_insensitive = TRUE, padding = FALSE, verbose = FALSE, ...) {
+  toks <- list(1:50, 200:250)
+  if(selection=='remove'){
+    y <-  select_tokens_cppl_mt4(x, features, TRUE, padding)
+  }else{
+    y <-  select_tokens_cppl_mt4(x, features, FALSE, padding)
+  }
+  return(y)
+}
 
 
 #' @rdname selectFeatures

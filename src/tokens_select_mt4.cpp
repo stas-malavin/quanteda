@@ -17,7 +17,8 @@ struct select_tokens4 : public Worker
   const bool remove;
   const bool spacer;
   //std::mutex lock_input4;
-  std::mutex lock_output4;
+  //std::mutex lock_output4;
+  tthread::mutex lock_output4;
   
   // Constructor
   select_tokens4(const List input, List output, const std::unordered_set<int> set_types, bool remove, bool spacer): 

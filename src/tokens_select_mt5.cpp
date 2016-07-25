@@ -1,6 +1,7 @@
 #include <Rcpp.h>
 #include <vector>
 #include <mutex>
+//#include <algorithm>    // std::transform
 
 // [[Rcpp::depends(RcppParallel)]]
 #include <RcppParallel.h>
@@ -78,12 +79,11 @@ List select_tokens_cppl_mt5(SEXP x,
   std::vector< std::vector<int> > input = Rcpp::as< std::vector< std::vector<int> > >(x);
   std::vector< std::vector<int> > output(input.size());
   
-  std::unordered_set<int> set_types;
-  for (int g = 0; g < types.size(); g++){
-    set_types.insert(types[g]);
-  }
+   //std::vector<int> types_hash(types.size());
+  //std::transform (types.begin(), types.end(), types_hash.begin(), hash);
+  //std::unordered_set<int> set_types (types_hash.begin(), types_hash.end());
   
-  // SquareRoot functor (pass input and output matrixes)
+  std::unordered_set<int> set_types (types.begin(), types.end());
   select_tokens5 select_tokens5(input, output, set_types, remove, spacer);
   
   // call parallelFor to do the work
@@ -97,6 +97,8 @@ List select_tokens_cppl_mt5(SEXP x,
 /*** R
 
 toks <- list(1:50, 200:250)
-out <-  select_tokens_cppl_mt5(rep(toks, 1000000), c(10, 50, 220, 230), FALSE, TRUE)
-
+targets <- c(10, 50, 220, 230)
+microbenchmark::microbenchmark(
+out <-  select_tokens_cppl_mt5(rep(toks, 1000000), targets, FALSE, TRUE),
+times=10)
 */

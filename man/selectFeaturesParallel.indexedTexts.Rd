@@ -47,9 +47,14 @@ types <- unique(unlist(toks, use.names=FALSE))
 toks_index <- lapply(toks, function(x, y) match(x, y), types)
 stopwords_index <- match(stopwords("english"), types)
 stopwords_index <- stopwords_index[!is.na(stopwords_index)]
+toks2 <- selectFeatures(toks, stopwords("english"), case_insensitive=FALSE, "remove", verbose = FALSE)
+toks2_index <- selectFeaturesParallel.indexedTexts(toks_index, stopwords_index, "remove")
+head(toks2[[1]], 20)
+head(types[toks2_index[[1]]], 20)
 microbenchmark::microbenchmark(
-   seri = selectFeatures(toks, stopwords("english"), "remove", verbose = FALSE),
-   para = selectFeaturesParallel.indexedTexts(toks_index, stopwords_index)
+   seri = selectFeatures(toks, stopwords("english"), case_insensitive=FALSE, "remove", verbose = FALSE),
+   para = selectFeaturesParallel.indexedTexts(toks_index, stopwords_index, "remove")
+   , unit='relative'
 )
 }
 

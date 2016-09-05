@@ -41,6 +41,10 @@ select_tokens_cppl_mt4 <- function(input, types, remove, spacer) {
     .Call('quanteda_select_tokens_cppl_mt4', PACKAGE = 'quanteda', input, types, remove, spacer)
 }
 
+select_tokens_cppl_mt5 <- function(x, types, remove, spacer) {
+    .Call('quanteda_select_tokens_cppl_mt5', PACKAGE = 'quanteda', x, types, remove, spacer)
+}
+
 split_df_cpp <- function(df) {
     .Call('quanteda_split_df_cpp', PACKAGE = 'quanteda', df)
 }

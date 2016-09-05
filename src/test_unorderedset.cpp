@@ -47,9 +47,17 @@ CharacterVector set_rcpp(CharacterVector tokens,
 }
 
 /*** R
-tokens <- rep(letters, 100)
+
+
+toks <- rep(letters, 100)
 microbenchmark::microbenchmark(
-  set_std(tokens, c('a', 'c', 'd')),
-  set_rcpp(tokens, c('a', 'c', 'd'))
+  set_std(toks, c('a', 'c', 'd')),
+  set_rcpp(toks, c('a', 'c', 'd'))
 )
+  
+toks2 <- tokenize(encodedTexts[[1]])[[1]]
+std <- set_std(toks2, toks2[1:10])
+rcpp <- set_rcpp(toks2, toks2[1:10])
+  
+  
 */

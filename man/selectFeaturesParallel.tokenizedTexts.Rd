@@ -45,8 +45,8 @@ toks <- tokenize(SOTUCorpus, removePunct = TRUE)
 # head to head, old v. new
 system.time(selectFeaturesParallel.tokenizedTexts(toks, stopwords("english"), "remove", verbose = FALSE))
 microbenchmark::microbenchmark(
-    para = selectFeaturesParallel.tokenizedTexts(toks, stopwords("english"), "remove", verbose = FALSE),
     seri = selectFeatures(toks, stopwords("english"), "remove", verbose = FALSE),
+    para = selectFeaturesParallel.tokenizedTexts(toks, stopwords("english"), "remove", verbose = FALSE),
     times = 5, unit = "relative")
 }
 

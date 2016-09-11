@@ -53,7 +53,8 @@ head(toks2[[1]], 20)
 head(types[toks2_index[[1]]], 20)
 microbenchmark::microbenchmark(
    seri = selectFeatures(toks, stopwords("english"), case_insensitive=FALSE, "remove", verbose = FALSE),
-   para = selectFeaturesParallel.indexedTexts(toks_index, stopwords_index, "remove")
+   para = selectFeaturesParallel.tokenizedTexts(toks, stopwords("english"), "remove", verbose = FALSE),
+   paraint = selectFeaturesParallel.indexedTexts(toks_index, stopwords_index, "remove")
    , unit='relative'
 )
 }

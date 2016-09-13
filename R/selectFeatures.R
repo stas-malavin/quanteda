@@ -384,12 +384,12 @@ selectFeaturesParallel.tokenizedTexts <- function(x, features, selection = c("ke
 #' toks_index <- lapply(toks, function(x, y) match(x, y), types)
 #' stopwords_index <- match(stopwords("english"), types)
 #' stopwords_index <- stopwords_index[!is.na(stopwords_index)]
-#' toks2 <- selectFeatures.tokenizedTexts(toks, stopwords("english"), case_insensitive=FALSE, selection="remove", verbose = FALSE)
+#' toks2 <- selectFeatures(toks, stopwords("english"), case_insensitive=FALSE, selection="remove", verbose = FALSE)
 #' toks2_index <- selectFeaturesParallel.indexedTexts(toks_index, stopwords_index, "remove")
 #' head(toks2[[1]], 20)
 #' head(types[toks2_index[[1]]], 20)
 #' microbenchmark::microbenchmark(
-#'    seri = selectFeatures.tokenizedTexts(toks, stopwords("english"), case_insensitive=FALSE, selection="remove", verbose = FALSE),
+#'    seri = selectFeatures(toks, stopwords("english"), case_insensitive=FALSE, selection="remove", verbose = FALSE),
 #'    para = selectFeaturesParallel.tokenizedTexts(toks, stopwords("english"), selection="remove", verbose = FALSE),
 #'    paraint = selectFeaturesParallel.indexedTexts(toks_index, stopwords_index, selection="remove"),
 #'    unit='relative'

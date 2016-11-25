@@ -7,7 +7,7 @@ Authors@R: c( person("Kenneth", "Benoit", email = "kbenoit@lse.ac.uk", role =
     "watanabe.kohei@gmail.com", role = "ctb"), person("Benjamin", "Lauderdale",
     email = "B.E.lauderdale@lse.ac.uk", role = "ctb"),
     person("Adam", "Obeng", email = "quanteda@binaryeagle.com", role = "ctb"),
-    person("Pablo", "Barberá", email = "pablo.barbera@nyu.edu",
+    person("Pablo", "Barber<U+8C29>", email = "pablo.barbera@nyu.edu",
     role = "ctb"),
     person("Will", "Lowe", email="wlowe@princeton.edu", role="ctb"))
 Author: Kenneth Benoit [aut, cre],
@@ -15,7 +15,7 @@ Author: Kenneth Benoit [aut, cre],
     Kohei Watanabe [ctb],
     Benjamin Lauderdale [ctb],
     Adam Obeng [ctb],
-    Pablo Barberá [ctb],
+    Pablo Barber<U+8C29> [ctb],
     Will Lowe [ctb]
 Maintainer: Kenneth Benoit <kbenoit@lse.ac.uk>
 Version: 0.9.8.9016
@@ -117,6 +117,8 @@ Collate:
     'textmodel-generics.R'
     'textmodel-wordfish.R'
     'textmodel-wordscores.R'
+    'textstat_dist.R'
+    'textstat_simil.R'
     'toLower.R'
     'tokenize.R'
     'tokenize_outtakes.R'

@@ -26,7 +26,7 @@ tokenize <- function(x, ...) {
 #'   \describe{ \item{\code{"word"}}{(recommended default) smartest, but 
 #'   slowest, word tokenization method; see 
 #'   \link[stringi]{stringi-search-boundaries} for details.} 
-#'   \item{\code{"fasterword"}}{dumber, but faster, word tokenizeation method, 
+#'   \item{\code{"fasterword"}}{dumber, but faster, word tokenization method, 
 #'   uses {\link[stringi]{stri_split_charclass}(x, "\\\\p{WHITE_SPACE}")}} 
 #'   \item{\code{"fastestword"}}{dumbest, but fastest, word tokenization method,
 #'   calls \code{\link[stringi]{stri_split_fixed}(x, " ")}} 
@@ -35,11 +35,11 @@ tokenize <- function(x, ...) {
 #'   exceptions in English such as "Prof. Plum killed Mrs. Peacock." (but far 
 #'   from perfect).} }
 #' @param removeNumbers remove tokens that consist only of numbers, but not 
-#'   words that start with digits, e.g. \code{2day}
+#'   words that start with digits, e.g. \code{2day}.
 #' @param removePunct if \code{TRUE}, remove all characters in the Unicode 
-#'   "Punctuation" [P] class
+#'   "Punctuation" [P] class.
 #' @param removeSymbols if \code{TRUE}, remove all characters in the Unicode 
-#'   "Symbol" [S] class
+#'   "Symbol" [S] class.
 #' @param removeTwitter remove Twitter characters \code{@@} and \code{#}; set to
 #'   \code{TRUE} if you wish to eliminate these.
 #' @param removeURL if \code{TRUE}, find and eliminate URLs beginning with
@@ -67,13 +67,13 @@ tokenize <- function(x, ...) {
 #'   different from the default of 1.  See \code{\link{skipgrams}}.
 #' @param concatenator character to use in concatenating \emph{n}-grams, default
 #'   is "\code{_}", which is recommended since this is included in the regular 
-#'   expression and Unicode definitions of "word" characters
+#'   expression and Unicode definitions of "word" characters.
 #' @param simplify if \code{TRUE}, return a character vector of tokens rather 
 #'   than a list of length \code{\link{ndoc}(texts)}, with each element of the 
 #'   list containing a character vector of the tokens corresponding to that 
 #'   text.
 #' @param verbose if \code{TRUE}, print timing messages to the console; off by 
-#'   default
+#'   default.
 #' @import stringi
 #' @details The tokenizer is designed to be fast and flexible as well as to 
 #'   handle Unicode correctly. Most of the time, users will construct \link{dfm}
